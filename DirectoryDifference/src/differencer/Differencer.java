@@ -3,6 +3,8 @@ package differencer;
 import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Differencer {
 	
@@ -10,7 +12,19 @@ public class Differencer {
 		
 	}
 	
-	public Set<String> getAllSubFiles(File f) {
+	public Set<String> findDifferenceBetween(File one, File two) {
+		Set<String> difference = new HashSet<>();
+		Set<String> subfilesOne = getAllSubfiles(one);
+		Set<String> subfileTwo = getAllSubfiles(two);
+		
+		difference = subfilesOne.stream()
+			.filter(subfileTwo::contains)
+			.collect(Collectors.toSet());
+		
+		return difference;
+	}
+	
+	public Set<String> getAllSubfiles(File f) {
 		Set<String> files = new HashSet<>();
 		for(File x: f.listFiles())
 			recursiveJoin(x, f.toString().length(), files);
